@@ -74,8 +74,7 @@ class LogitReg(Classifier):
         """
         grad = np.zeros(len(theta))
         ### YOUR CODE HERE
-        theta = np.array(theta,ndmin = 2)
-        grad=(utils.sigmoid(np.dot(X, theta.T)) - y)*X+self.params['regwgt']*self.regularizer[1](theta)
+        grad=np.dot((utils.sigmoid(np.dot(X, theta.T)) - y).T,X)+self.params['regwgt']*self.regularizer[1](theta)
         #ask ta
         return grad
 
@@ -85,7 +84,7 @@ class LogitReg(Classifier):
         """
         self.weights = np.zeros(Xtrain.shape[1], )
         ### YOUR CODE HERE
-        stepsize = 0.04
+        stepsize = 0.03
         epoch =1000
         w = np.zeros((ytrain.shape[1],Xtrain.shape[1]))
 
@@ -106,9 +105,22 @@ class LogitReg(Classifier):
         observations.
         """
         ### YOUR CODE HERE
-        ytest = utils.sigmoid(np.dot(Xtest, self.weights.T))
-        ytest[ytest >=0.5] = 1
-        ytest[ytest < 0.5] = 0
+        value = utils.sigmoid(np.dot(Xtest, self.weights.T))
+        ytest = np.zeros(value.shape)
+        for i in range(value.shape[0]):
+            maxIndex = 0
+            maxValue = 0
+            for j in range(value.shape[1]):
+                if value[i][j]>maxValue:
+                    maxIndex = j
+                    maxValue = value[i][j]
+            ytest[i][maxIndex] = 1
+        for i in ytest:
+            print i
+        ytest = self.y_digit(ytest)
+
+
+
         ### END YOUR CODE
         assert len(ytest) == Xtest.shape[0]
         return ytest
@@ -116,5 +128,12 @@ class LogitReg(Classifier):
         randomize = np.arange(len(x1))
         np.random.shuffle(randomize)
         return x1[randomize],x2[randomize]
+
+    def y_digit(self,ytrain):
+        k = np.zeros(ytrain.shape[0])
+        for i in range(ytrain.shape[0]):
+            if len(np.where(ytrain[i] == 1)[0]) != 0:
+                k[i] = np.where(ytrain[i] == 1)[0][0]
+        return k
 
 

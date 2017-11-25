@@ -2,12 +2,10 @@ import csv
 import numpy as np
 def load_train_and_test_data(trainsize,testsize):
     filename = 'datasets/sem.csv'
-
-
-
     dataset = loadcsv(filename)
     trainset, testset = splitdataset(dataset,trainsize, testsize,featureoffset=256)
     return trainset,testset
+
 def loadcsv(filename):
     dataset = np.genfromtxt(filename, delimiter=',')
     return dataset
@@ -39,3 +37,4 @@ def splitdataset(dataset, trainsize, testsize, testdataset=None, featureoffset=N
 
 
     return ((Xtrain, ytrain), (Xtest, ytest))
+

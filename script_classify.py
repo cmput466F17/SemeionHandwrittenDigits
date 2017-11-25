@@ -7,6 +7,15 @@ import data_loader as dtl
 import logistic_method as algs
 
 
+def hamdist(str1, str2):
+    """Count the # of differences between equal length strings str1 and str2"""
+    diffs = 0
+    for ch1, ch2 in zip(str1, str2):
+        if ch1 != ch2:
+            diffs += 1
+    return diffs
+
+
 def getaccuracy(ytest, predictions):
     correct = 0
 
@@ -19,7 +28,12 @@ def getaccuracy(ytest, predictions):
 
 def geterror(ytest, predictions):
     return (100.0-getaccuracy(ytest, predictions))
-
+def y_digit(ytrain):
+	k=np.zeros(ytrain.shape[0])
+	for i in range(ytrain.shape[0]):
+		if len(np.where(ytrain[i]==1)[0])!=0:
+			k[i]=np.where(ytrain[i]==1)[0][0]
+	return k
 
 if __name__ == '__main__':
     trainsize = 1000
@@ -38,7 +52,7 @@ if __name__ == '__main__':
     numalgs = len(classalgs)
 
     parameters = (
-        {'regwgt': 0.0, 'nh': 4},
+        {'regwgt': 0.0, 'nh': 16},
         #{'regwgt': 0.01, 'nh': 8},
         #{'regwgt': 0.05, 'nh': 16},
         #{'regwgt': 0.1, 'nh': 32},
@@ -66,7 +80,14 @@ if __name__ == '__main__':
                 learner.learn(trainset[0], trainset[1])
                 # Test model
                 predictions = learner.predict(testset[0])
-                error = geterror(testset[1], predictions)
+                ytestset = y_digit(testset[1])
+
+                print ytestset
+                print predictions
+                print hamdist(ytestset,predictions)
+
+                error = geterror(ytestset, predictions)
+
                 print ('Error for ' + learnername + ': ' + str(error))
                 errors[learnername][p,r] = error
 
