@@ -31,14 +31,11 @@ def splitdataset(dataset, trainsize, testsize, testdataset=None, featureoffset=N
         featureend = featureend + 1
         outputlocation = 0
 
-    Xtrain = dataset[randindices[0:trainsize], featureoffset:featureend]
-    ytrain = dataset[randindices[0:trainsize], outputlocation:dataset.shape[1]]
-    Xtest = dataset[randindices[trainsize:trainsize + testsize], featureoffset:featureend]
-    ytest = dataset[randindices[trainsize:trainsize + testsize], outputlocation:dataset.shape[1]]
+    Xtrain = dataset[randindices[0:trainsize],0:256]
+    ytrain = dataset[randindices[0:trainsize],256:266]
+    Xtest = dataset[randindices[trainsize:trainsize + testsize],0:256]
+    ytest = dataset[randindices[trainsize:trainsize + testsize], 256:266]
 
 
 
     return ((Xtrain, ytrain), (Xtest, ytest))
-
-train,test = load_train_and_test_data(1000,500)
-print test[1]
